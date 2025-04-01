@@ -10,11 +10,11 @@
 **CorePost** — это модульная система защиты корпоративных устройств от несанкционированного доступа, утечек данных и краж. Решение построено на принципах **Zero Trust**, **многофакторной аутентификации** и **гибкой кастомизации под инфраструктуру заказчика**.
 
 
-<figure> <img src="https://github.com/user-attachments/assets/2ecd66a1-3c24-4e9b-8ff5-2b3cbaed2e3c"/> <figcaption align="center"><i>📥 Регистрация устройства и получение токена для шифрования</i></figcaption> </figure>
+<figure> <img src="https://github.com/user-attachments/assets/7ca9593d-2a8e-44e5-a2f6-bc21fb1a9a55"/> <figcaption align="center"><i>📥 Регистрация устройства и получение токена для шифрования</i></figcaption> </figure>
 
-<figure> <img src="https://github.com/user-attachments/assets/e43c27f2-3528-4844-8827-0c29dc0856ec"/> <figcaption align="center"><i>✅ Расшифровка диска — только при наличии всех факторов</i></figcaption> </figure> 
+<figure> <img src="https://github.com/user-attachments/assets/d3fa0012-cab9-4eaf-853d-557fb1e91589"/> <figcaption align="center"><i>✅ Расшифровка диска — только при наличии всех факторов</i></figcaption> </figure> 
 
-<figure> <img src="https://github.com/user-attachments/assets/cddc6ad7-40ab-425d-943c-0fc8d41682b5"/> <figcaption align="center"><i>❌ Попытка злоумышленника — нет USB-ключа и активирован режим тревоги</i></figcaption> </figure>
+<figure> <img src="https://github.com/user-attachments/assets/dcb8fc3e-679f-433b-a67d-8e236f32961e"/> <figcaption align="center"><i>❌ Попытка злоумышленника — нет USB-ключа и активирован режим тревоги</i></figcaption> </figure>
 
 
 ---
@@ -88,9 +88,11 @@
 
 **CorePost** is a modular system for **enterprise device protection**. It prevents unauthorized access, mitigates data leakage, and allows instant remote device lockdowns using **multi-factor authentication**, **pre-boot disk encryption** and a **panic-button interface**.
 
-![CorePostRegistrationGb](https://github.com/user-attachments/assets/2ecd66a1-3c24-4e9b-8ff5-2b3cbaed2e3c)
-![CorePostUsageGb](https://github.com/user-attachments/assets/e43c27f2-3528-4844-8827-0c29dc0856ec)
-![CorePostMaliciousGb](https://github.com/user-attachments/assets/cddc6ad7-40ab-425d-943c-0fc8d41682b5)
+<figure> <img src="https://github.com/user-attachments/assets/2ecd66a1-3c24-4e9b-8ff5-2b3cbaed2e3c" width="600"/> <figcaption align="center"><i>📥 Device registration and token provisioning for disk encryption</i></figcaption> </figure>
+
+<figure> <img src="https://github.com/user-attachments/assets/e43c27f2-3528-4844-8827-0c29dc0856ec" width="600"/> <figcaption align="center"><i>✅ Successful unlock — all factors present (password + USB + server)</i></figcaption> </figure>
+
+<figure> <img src="https://github.com/user-attachments/assets/cddc6ad7-40ab-425d-943c-0fc8d41682b5" width="600"/> <figcaption align="center"><i>❌ Intruder blocked — no USB key, panic mode active, token not issued</i></figcaption> </figure>
 
 ---
 
