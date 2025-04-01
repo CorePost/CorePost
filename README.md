@@ -9,8 +9,9 @@
 
 **CorePost** — это модульная система защиты корпоративных устройств от несанкционированного доступа, утечек данных и краж. Решение построено на принципах **Zero Trust**, **многофакторной аутентификации** и **гибкой кастомизации под инфраструктуру заказчика**.
 
-<img src="scheme_architecture_rus.png" alt="Архитектура CorePost" width="600"/>
-
+![CorePostRegistrationRu](https://github.com/user-attachments/assets/50eb4714-3386-4740-9fbf-d517f70c9c15)
+![CorePostUsageRu](https://github.com/user-attachments/assets/f84e6524-18bd-4704-bb1d-ae06f7d36b9f)
+![CorePostMaliciousRu](https://github.com/user-attachments/assets/dd8037ea-f408-4aa6-bc25-a538fb6b6415)
 ---
 
 ### ✅ Основные цели
@@ -82,7 +83,10 @@
 
 **CorePost** is a modular system for **enterprise device protection**. It prevents unauthorized access, mitigates data leakage, and allows instant remote device lockdowns using **multi-factor authentication**, **pre-boot disk encryption** and a **panic-button interface**.
 
-<img src="scheme_architecture_eng.png" alt="CorePost Architecture" width="600"/>
+![CorePostRegistrationGb](https://github.com/user-attachments/assets/5cff273b-521f-4c5e-abf9-8f1a1e059dbe)
+![CorePostUsageGb](https://github.com/user-attachments/assets/90b0a6c5-2d42-466a-b894-d352b2a14679)
+![CorePostMaliciousGb](https://github.com/user-attachments/assets/6312a75c-8898-4ef5-842a-ae8812abaed8)
+
 
 ---
 
