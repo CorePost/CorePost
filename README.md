@@ -1,182 +1,68 @@
-# CorePost Project  
-*Data leaks don't ask permission.*
+# CorePost
 
----
+CorePost — модульная система предзагрузочной и посткомпрометационной защиты корпоративных устройств. Проект позволяет централизованно разрешать или запрещать расшифровку ноутбука до загрузки ОС и отзывать доверие к уже работающему устройству после инцидента.
 
-## 🇷🇺 Описание проекта
+## Что делает система
 
-### 🔐 Что такое CorePost?
+- переносит решение о допуске к данным на предзагрузочный этап;
+- поддерживает профили 2FA и 3FA для расшифровки LUKS;
+- даёт panic-lock через мобильный клиент;
+- отзывает доверие к уже загруженному устройству через post-boot агент;
+- работает локально, без привязки к внешним облачным сервисам.
 
-**CorePost** — это модульная система защиты корпоративных устройств от несанкционированного доступа, утечек данных и краж. Решение построено на принципах **Zero Trust**, **многофакторной аутентификации** и **гибкой кастомизации под инфраструктуру заказчика**.
+## Архитектура
+
+В CorePost есть четыре функциональных контура:
+
+1. `corepost-server` хранит состояние устройств, секреты, политики и принимает решение о допуске.
+2. `corepost-preboot` работает в ранней загрузке, поднимает сеть, запрашивает серверный токен и разрешает или запрещает расшифровку.
+3. `corepost-agent` контролирует уже загруженную систему и выполняет post-boot политику отзыва доверия.
+4. `corepost-mobile-android` и `corepost-mobile-ios` реализуют panic-клиент для аварийной блокировки.
+
+Отдельно `corepost-install` отвечает за установку, первичную регистрацию устройства и раскладку конфигурации для preboot и agent.
+
+## Репозитории
+
+| Репозиторий | Назначение | Ссылка |
+| --- | --- | --- |
+| `CorePost` | корневой репозиторий проекта, архитектура, документация, demo flow | https://github.com/CorePost/CorePost |
+| `corepost-server` | FastAPI-сервер, API, хранение состояния, OpenAPI, docker compose | https://github.com/CorePost/corepost-server |
+| `corepost-preboot` | предзагрузочный модуль допуска и интеграция с initramfs | https://github.com/CorePost/corepost-preboot |
+| `corepost-agent` | post-boot агент для Linux, `systemd + curl`, политика реакции | https://github.com/CorePost/corepost-agent |
+| `corepost-install` | установщик, регистрация устройства, генерация конфигов | https://github.com/CorePost/corepost-install |
+| `corepost-mobile-android` | Android panic-клиент и релизный APK | https://github.com/CorePost/corepost-mobile-android |
+| `corepost-mobile-ios` | iOS panic-клиент и релизный IPA | https://github.com/CorePost/corepost-mobile-ios |
+
+## Сценарий работы
+
+1. Администратор или установщик регистрирует устройство на сервере.
+2. `corepost-install` получает `deviceId`, секреты и политику, затем подготавливает устройство.
+3. При включении ноутбука `corepost-preboot` поднимает сеть и отправляет подписанный запрос на `corepost-server`.
+4. Если устройство в состоянии `normal`, сервер подтверждает допуск и разрешает предзагрузочную расшифровку.
+5. Если устройство переведено в `pending_lock` или `locked`, сервер отказывает в выдаче токена.
+6. Если инцидент произошёл уже после загрузки ОС, `corepost-agent` получает команду на отзыв доверия и применяет политику: блокировка, завершение сессии или выключение.
+7. После административного восстановления устройство можно вернуть в штатный контур.
+
+## Модель состояний
+
+Проектная модель устройства соответствует ПЗ 2026:
+
+- `registered` — устройство создано в системе и готово к первичной привязке;
+- `normal` — штатный режим, допуск к данным разрешён;
+- `pending_lock` — двухшаговое подтверждение блокировки уже начато;
+- `locked` — аварийный режим, допуск к данным запрещён;
+- `restricted` — восстановление возможно только по дополнительной политике;
+- `recovered` — устройство возвращено в рабочее состояние.
 
 
-<figure> <img src="https://github.com/user-attachments/assets/7ca9593d-2a8e-44e5-a2f6-bc21fb1a9a55"/> <figcaption align="center"><i>📥 Регистрация устройства и получение токена для шифрования</i></figcaption> </figure>
 
-<figure> <img src="https://github.com/user-attachments/assets/d3fa0012-cab9-4eaf-853d-557fb1e91589"/> <figcaption align="center"><i>✅ Расшифровка диска — только при наличии всех факторов</i></figcaption> </figure> 
+## Стенд и проверка
 
-<figure> <img src="https://github.com/user-attachments/assets/dcb8fc3e-679f-433b-a67d-8e236f32961e"/> <figcaption align="center"><i>❌ Попытка злоумышленника — нет USB-ключа и активирован режим тревоги</i></figcaption> </figure>
+Для полноценной проверки проекта нужен локальный стенд из нескольких частей:
 
-
----
-
-### ✅ Основные цели
-
-- Полная защита шифрованного диска **до загрузки операционной системы**  
-- Реакция на инциденты в **реальном времени** через panic-интерфейс  
-- **Удалённое управление доступом** через безопасный внутренний сервер  
-- **Локальность, независимость от облака и сторонних вендоров**  
-- Масштабируемость и гибкая настройка под любые требования компании
-
----
-
-### 🧠 Философия CorePost
-
-> **"Не доверяй — проверяй. Даже своему железу."**  
-> Каждый ноутбук, каждое устройство рассматривается как потенциально скомпрометированное.  
-> Только валидация по всем факторам (сеть, ключ, пароль, сервер) позволяет получить доступ к данным.
-
----
-
-### 🧩 Уникальные возможности
-
-- **3-факторная авторизация** (пароль, USB-ключ, сетевой токен)
-- **Panic-кнопка на мобильном** — сотрудник может немедленно пометить устройство как украденное
-- Полностью **локальный сервер** на FastAPI, можно установить на сервр комании
-- Автономная работа **initramfs** с сетевой проверкой доступа
-- **daemon**, работающий на уровне `init`, неубиваемый злоумышленником
-- Поведение при утрате связи: **гибкая реакция** (выключение, задержка, игнор) в зависимости от настройки
-- Поддержка **whitelist'ов, регистрационных хэшей и конфигурационных политик**
-
----
-
-### 🔄 Масштабируемость и кастомизация
-
-- Инсталляция с `.conf`-файлом, содержащим всю необходимую логику политики безопасности  
-- Поддержка централизованных политик и кастомных скриптов при установке  
-- Простая интеграция в существующую корпоративную инфраструктуру (в том числе в офлайн-сегменты)
-
----
-
-### 🛠 Компоненты системы
-
-| Компонент     | Назначение                                        |
-|---------------|---------------------------------------------------|
-| `initramfs`   | Preboot-окружение, проверка сети, токенов, монтирование |
-| `install`     | Установщик + генерация ключей, конфигов и привязки |
-| `daemon`      | Фоновый агент, проверка статуса устройства        |
-| `server`      | Выдача токенов, регистрация устройств, panic API |
-| `mobile`      | Приложение тревожной кнопки                       |
-
----
-
-### 🆚 Сравнение с аналогами
-
-| Возможность                      | CorePost | BitLocker | LUKS + Clevis | Symantec |
-|----------------------------------|----------|-----------|----------------|----------|
-| Panic-кнопка                     | ✅       | ❌        | ❌             | ❌       |
-| 3FA (USB + password + net)       | ✅       | ⚠️ TPM    | ❌             | ⚠️       |
-| Работает до загрузки ОС          | ✅       | ✅        | ✅             | ✅       |
-| Полная локальность               | ✅       | ❌ (Intune) | ⚠️             | ❌       |
-| Open-source                      | ✅       | ❌        | ✅             | ❌       |
-| Масштабируемая архитектура       | ✅       | ⚠️        | ❌             | ⚠️       |
-
----
-
-## 🇬🇧 English Description
-
-### 🔐 What is CorePost?
-
-**CorePost** is a modular system for **enterprise device protection**. It prevents unauthorized access, mitigates data leakage, and allows instant remote device lockdowns using **multi-factor authentication**, **pre-boot disk encryption** and a **panic-button interface**.
-
-<figure> <img src="https://github.com/user-attachments/assets/2ecd66a1-3c24-4e9b-8ff5-2b3cbaed2e3c"/> <figcaption align="center"><i>📥 Device registration and token provisioning for disk encryption</i></figcaption> </figure>
-
-<figure> <img src="https://github.com/user-attachments/assets/e43c27f2-3528-4844-8827-0c29dc0856ec"/> <figcaption align="center"><i>✅ Successful unlock — all factors present (password + USB + server)</i></figcaption> </figure>
-
-<figure> <img src="https://github.com/user-attachments/assets/cddc6ad7-40ab-425d-943c-0fc8d41682b5"/> <figcaption align="center"><i>❌ Intruder blocked — no USB key, panic mode active, token not issued</i></figcaption> </figure>
-
----
-
-### ✅ Key Goals
-
-- Protect encrypted disks **before OS boots**
-- Respond to theft or loss with a **mobile panic button**
-- **Fully offline-capable**, using local server logic
-- Designed around **Zero Trust** principles
-- Highly **customizable and scalable** for any organization
-
----
-
-### 🧠 Core Philosophy
-
-> **"Assume breach. Trust no endpoint."**  
-> Every device is untrusted until it proves otherwise — through **password**, **hardware key**, and **real-time network verification**.
-
----
-
-### 🧩 Unique Features
-
-- **3FA preboot unlock** (password + USB key + remote server)
-- **Mobile panic app** for instant lockdown
-- Local-only **FastAPI server** — no cloud required
-- Full control over **offline policies** and server behavior
-- A **daemon embedded into init**, designed to be unkillable
-- USB validation (non-clonable where supported)
-- Network-verifiable unlock tokens
-
----
-
-### 🔄 Scalability & Customization
-
-- Configurable installer with `.conf` file for security policies  
-- Modular architecture — swap/extend components per use case  
-- Corporate deployment with whitelisting, hardware-bound keys, key revocation
-
----
-
-### 🛠 System Components
-
-| Component     | Purpose                                  |
-|---------------|------------------------------------------|
-| `initramfs`   | Preboot shell + unlock logic             |
-| `install`     | Configurable installer & registration    |
-| `daemon`      | Root-level agent for device status       |
-| `server`      | Token management + panic control         |
-| `mobile`      | Panic-button companion app               |
-
----
-
-### 🆚 Compared to other solutions
-
-| Feature                         | CorePost | BitLocker | LUKS + Clevis | Symantec |
-|----------------------------------|----------|-----------|----------------|----------|
-| Panic button                    | ✅       | ❌        | ❌             | ❌       |
-| 3FA (USB + password + net)      | ✅       | ⚠️ TPM    | ❌             | ⚠️       |
-| Pre-boot protection             | ✅       | ✅        | ✅             | ✅       |
-| Fully offline-capable           | ✅       | ❌ (cloud) | ⚠️             | ❌       |
-| Open-source                     | ✅       | ❌        | ✅             | ❌       |
-| Designed for scalability        | ✅       | ⚠️        | ❌             | ⚠️       |
-
----
-
-## 📁 Репозиторий
-
-Реализация проекта доступна в виде отдельных модулей:
-
-```
-📦 /corepost-initramfs
-📦 /corepost-daemon
-📦 /corepost-server
-📦 /corepost-install
-📦 /corepost-mobile
-```
-
----
-
-## 🧩 Status: Active R&D
-
-Проект находится в активной разработке.  
-
----
-
-**CorePost Project**  
-*Data leaks don't ask permission.*
+- `corepost-server` в Docker Compose;
+- headless VM в QEMU с BIOS, GRUB, initramfs и Linux userspace;
+- preboot-контур для проверки допуска до загрузки ОС;
+- post-boot агент для сценария отзыва доверия;
+- Android-эмулятор `emulator -avd my_avd` для мобильной демонстрации;
+- Xcode для сборки и проверки iOS-клиента.
