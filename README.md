@@ -11,9 +11,9 @@
 
 
 <figure> <img src="https://github.com/user-attachments/assets/2ecd66a1-3c24-4e9b-8ff5-2b3cbaed2e3c"/> <figcaption align="center"><i>📥 Регистрация устройства и получение токена для шифрования</i></figcaption> </figure>
----
+
 <figure> <img src="https://github.com/user-attachments/assets/e43c27f2-3528-4844-8827-0c29dc0856ec"/> <figcaption align="center"><i>✅ Расшифровка диска — только при наличии всех факторов</i></figcaption> </figure> 
----
+
 <figure> <img src="https://github.com/user-attachments/assets/cddc6ad7-40ab-425d-943c-0fc8d41682b5"/> <figcaption align="center"><i>❌ Попытка злоумышленника — нет USB-ключа и активирован режим тревоги</i></figcaption> </figure>
 
 
