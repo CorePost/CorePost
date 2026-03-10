@@ -10,6 +10,23 @@ CorePost — модульная система предзагрузочной и
 - отзывает доверие к уже загруженному устройству через post-boot агент;
 - работает локально, без привязки к внешним облачным сервисам.
 
+## Наглядная схема
+
+<figure>
+  <img src="docs/images/registration-flow.jpg" alt="Регистрация устройства и получение параметров допуска">
+  <figcaption>Регистрация устройства и получение параметров допуска.</figcaption>
+</figure>
+
+<figure>
+  <img src="docs/images/unlock-success-flow.jpg" alt="Штатная предзагрузочная расшифровка">
+  <figcaption>Штатная предзагрузочная расшифровка при наличии всех факторов.</figcaption>
+</figure>
+
+<figure>
+  <img src="docs/images/unlock-deny-flow.jpg" alt="Отказ в расшифровке после блокировки">
+  <figcaption>Отказ в расшифровке после блокировки или при неполном наборе факторов.</figcaption>
+</figure>
+
 ## Архитектура
 
 В CorePost есть четыре функциональных контура:
@@ -25,13 +42,13 @@ CorePost — модульная система предзагрузочной и
 
 | Репозиторий | Назначение | Ссылка |
 | --- | --- | --- |
-| `CorePost` | корневой репозиторий проекта, архитектура, документация, demo flow | https://github.com/CorePost/CorePost |
-| `corepost-server` | FastAPI-сервер, API, хранение состояния, OpenAPI, docker compose | https://github.com/CorePost/corepost-server |
-| `corepost-preboot` | предзагрузочный модуль допуска и интеграция с initramfs | https://github.com/CorePost/corepost-preboot |
-| `corepost-agent` | post-boot агент для Linux, `systemd + curl`, политика реакции | https://github.com/CorePost/corepost-agent |
-| `corepost-install` | установщик, регистрация устройства, генерация конфигов | https://github.com/CorePost/corepost-install |
-| `corepost-mobile-android` | Android panic-клиент и релизный APK | https://github.com/CorePost/corepost-mobile-android |
-| `corepost-mobile-ios` | iOS panic-клиент и релизный IPA | https://github.com/CorePost/corepost-mobile-ios |
+| `CorePost` | корневой репозиторий проекта, архитектура, документация, demo flow | текущий репозиторий |
+| `corepost-server` | FastAPI-сервер, API, хранение состояния, OpenAPI, docker compose | `../corepost-server` |
+| `corepost-preboot` | предзагрузочный модуль допуска и интеграция с initramfs | `../corepost-preboot` |
+| `corepost-agent` | post-boot агент для Linux, `systemd + curl`, политика реакции | `../corepost-agent` |
+| `corepost-install` | установщик, регистрация устройства, генерация конфигов | `../corepost-install` |
+| `corepost-mobile-android` | Android panic-клиент и релизный APK | `../corepost-mobile-android` |
+| `corepost-mobile-ios` | iOS panic-клиент и релизный IPA | `../corepost-mobile-ios` |
 
 ## Сценарий работы
 
@@ -45,7 +62,7 @@ CorePost — модульная система предзагрузочной и
 
 ## Модель состояний
 
-Проектная модель устройства соответствует ПЗ 2026:
+Система использует следующую модель состояний устройства:
 
 - `registered` — устройство создано в системе и готово к первичной привязке;
 - `normal` — штатный режим, допуск к данным разрешён;
@@ -66,3 +83,9 @@ CorePost — модульная система предзагрузочной и
 - post-boot агент для сценария отзыва доверия;
 - Android-эмулятор `emulator -avd my_avd` для мобильной демонстрации;
 - Xcode для сборки и проверки iOS-клиента.
+
+## Документация
+
+- [Краткое визуальное описание сценариев](docs/visual-flow.md)
+- `README.md` в компонентных репозиториях
+- раздел `Releases` в мобильных репозиториях
