@@ -9,7 +9,7 @@
 
 **CorePost** — это модульная система защиты корпоративных устройств от несанкционированного доступа, утечек данных и краж. Решение построено на принципах **Zero Trust**, **многофакторной аутентификации** и **гибкой кастомизации под инфраструктуру заказчика**.
 
-![CorePostRegistrationRu](https://github.com/user-attachments/assets/50eb4714-3386-4740-9fbf-d517f70c9c15)
+![CorePostRegistrationRu](https://github.com/user-attachments/assets/7ca9593d-2a8e-44e5-a2f6-bc21fb1a9a55)
 ![CorePostUsageRu](https://github.com/user-attachments/assets/f84e6524-18bd-4704-bb1d-ae06f7d36b9f)
 ![CorePostMaliciousRu](https://github.com/user-attachments/assets/dd8037ea-f408-4aa6-bc25-a538fb6b6415)
 ---
