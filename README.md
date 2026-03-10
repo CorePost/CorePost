@@ -88,11 +88,11 @@
 
 **CorePost** is a modular system for **enterprise device protection**. It prevents unauthorized access, mitigates data leakage, and allows instant remote device lockdowns using **multi-factor authentication**, **pre-boot disk encryption** and a **panic-button interface**.
 
-<figure> <img src="https://github.com/user-attachments/assets/2ecd66a1-3c24-4e9b-8ff5-2b3cbaed2e3c" width="600"/> <figcaption align="center"><i>📥 Device registration and token provisioning for disk encryption</i></figcaption> </figure>
+<figure> <img src="https://github.com/user-attachments/assets/2ecd66a1-3c24-4e9b-8ff5-2b3cbaed2e3c"/> <figcaption align="center"><i>📥 Device registration and token provisioning for disk encryption</i></figcaption> </figure>
 
-<figure> <img src="https://github.com/user-attachments/assets/e43c27f2-3528-4844-8827-0c29dc0856ec" width="600"/> <figcaption align="center"><i>✅ Successful unlock — all factors present (password + USB + server)</i></figcaption> </figure>
+<figure> <img src="https://github.com/user-attachments/assets/e43c27f2-3528-4844-8827-0c29dc0856ec"/> <figcaption align="center"><i>✅ Successful unlock — all factors present (password + USB + server)</i></figcaption> </figure>
 
-<figure> <img src="https://github.com/user-attachments/assets/cddc6ad7-40ab-425d-943c-0fc8d41682b5" width="600"/> <figcaption align="center"><i>❌ Intruder blocked — no USB key, panic mode active, token not issued</i></figcaption> </figure>
+<figure> <img src="https://github.com/user-attachments/assets/cddc6ad7-40ab-425d-943c-0fc8d41682b5"/> <figcaption align="center"><i>❌ Intruder blocked — no USB key, panic mode active, token not issued</i></figcaption> </figure>
 
 ---
 
